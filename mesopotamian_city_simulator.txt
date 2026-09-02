@@ -1,0 +1,20 @@
+𒀀𒁍𒋾𒅎 𒌨𒊑𒌓 𒐕
+    # print(mesopotamian city program)
+    # a-city's type is a city
+    # city's population is 2000
+    # print(a-city's population is {population})
+
+    𐏐 𒀭 mesopotamian 𒀀𒈝 𒀀𒁍𒌅 𒀭 𒀺 𒋗𒇬
+    𒆷𒁍𒁍𒌝 𒋗 𒀀𒈝
+    𒆷𒁍𒁍𒅎 𒉌𒋗𒌝 𒋗 2000
+    year𒌝 𒋗 2330
+    𐏐 year𒌝 𒋗 𒀭 𒀺 𒄿𒈾 𒀭 𒆠𒈠 year𒅎 𒋗𒇬
+    𐏐 𒆷𒁍𒁉𒅎 𒉌𒋗𒌝 𒋗 𒀭 𒀺 𒄿𒈾 𒀭 𒆠𒈠 𒉌𒋗𒅎 𒋗𒇬
+    𒀀𒁲 year𒌝 2320 𒆷 𒄿𒈠𒊍𒊩
+        year𒌝 𒋗 year𒌝 1 sub
+        𒍝𒌝 𒋗 100
+        𒉌𒋗𒌝 𒋗 𒉌𒋗𒌝 𒍝𒌝 𒉿𒍝𒁍
+        𐏐 year𒌝 𒋗 𒀭 𒀺 𒄿𒈾 𒀭 𒆠𒈠 year𒅎 𒋗𒇬
+        𐏐 𒆷𒁍𒁉𒅎 𒉌𒋗𒌝 𒋗 𒀭 𒀺 𒄿𒈾 𒀭 𒆠𒈠 𒉌𒋗𒅎 𒋗𒇬
+    𒐕
+    𒍝𒄠 𒉿𒍑𒋗𒊒𒌝
