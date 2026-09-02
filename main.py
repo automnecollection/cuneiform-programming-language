@@ -1,22 +1,8 @@
 from pathlib import Path
 
-vars = {}
-TRANSLATE_NUMBERS = {
-    "𒐇": 9,
-    "𒌋𒁹𒁹": 12,
-    "𒌋𒌋": 20,
-    "𒌋𒌋𒁹": 21
-}
-TRANSLATE_NUMBERS_LATIN = {value: key for key, value in TRANSLATE_NUMBERS.items()}
+from cuneiform_script import *
 
-LATIN_TRANSLATE = {
-    "𒋫": "ta",
-    "𒌝": "um",
-    "𒋗": "šu",
-    "𒆠": "kī",
-    "𒈠": "ma",
-    "𒂵": "ga"
-}
+vars = {}
 
 FUNCTIONS = [
     "𒉿𒍝𒁍"  # to write
@@ -92,6 +78,8 @@ def run_function(function):
                 # if parsed_token == "𒉿𒍝𒁍":
                     # a_val, b_val = add_tokens(tokens, depth)
                     # tokens[depth] = a_val + b_val
+                if parsed_token == "#":
+                    continue
 
                 if parsed_token == "𒋗":
                     # print("equals function detected")
@@ -153,7 +141,7 @@ def run_function(function):
                     if tokens[max_depth - min_depth + 1] == "𒄿𒈾":
                         print("𒄿𒈾 detected")
                         print_var = tokens[max_depth - min_depth + 2]
-                        print_val = vars[tokens[max_depth - min_depth + 4]]
+                        print_val = vars[tokens[max_depth - min_depth + 4].replace("𒅎", "") + "𒌝"]
                         if print_val in TRANSLATE_NUMBERS_LATIN:
                             print_val = TRANSLATE_NUMBERS_LATIN[print_val]
                         new_print = new_print.replace(print_var, str(print_val))
@@ -179,18 +167,19 @@ def run_function(function):
 
 if __name__ == '__main__':
     current_dir = Path(__file__).resolve().parent
-    program_loc = current_dir / "program.txt"
+    program_loc = current_dir / "mesopotamian_city_simulator.txt"
     file = open(program_loc, "r")
 
     with open(program_loc, encoding="utf-8") as f:
         src = f.read()
         # print(src)
-        src_split = src.split(" ")
+        src_split = src.split("\n")
         for token in src_split:
-            if token == "𒀀𒁍𒌅":
-                print("𒀀𒁍𒌅")
-                print("")
+            if token == "𒀀𒁍𒋾𒅎 𒌨𒊑𒌓 𒐕":
+                # print("got " + token)
                 run_function(src.split("𒐕")[1])
+            # else:
+                # print("did not get " + token)
 
     print("")
     print("VAR RESULTS:")
