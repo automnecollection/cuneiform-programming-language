@@ -9,6 +9,7 @@ TRANSLATE_NUMBERS_LATIN = {value: key for key, value in TRANSLATE_NUMBERS.items(
 LATIN_TRANSLATE = {
     # A
     "𒀀": "a",
+    "𒀜": "at",
     # B
     "𒁉": "bi",
     "𒁍": "bu",
@@ -21,7 +22,11 @@ LATIN_TRANSLATE = {
     # T
     "𒋫": "ta",
     "𒌅": "tu",
+    "𒌈": "tum",
     "𒌝": "um",
+    # S
+    "𒊭": "sa",
+
     "𒋗": "šu",
     "𒆠": "kī",
     "𒈠": "ma",

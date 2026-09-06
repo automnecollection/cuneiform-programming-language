@@ -3,6 +3,8 @@ from pathlib import Path
 from cuneiform_script import *
 
 vars = {}
+struct_vars = [{}]
+struct_vars_num = 0
 
 FUNCTIONS = [
     "𒉿𒍝𒁍"  # to write
@@ -23,14 +25,22 @@ def cunei_print(p):
             else:
                 translated_p += letter
         translated_p += " "
-    print("   " + p + " (" + translated_p.strip() + ")")
+    latin_translation = translated_p.strip()
+    latin_translation = latin_translation.replace("aa", "a")
+    latin_translation = latin_translation.replace("ii", "i")
+    latin_translation = latin_translation.replace("uu", "u")
+    # print("   " + p + " (" + latin_translation + ")")
+    print(p + " (" + latin_translation + ")")
 
 def math_tokens(a_val, b_val, math_type):
     if a_val in vars:
         a_val = vars[a_val]
+    else:
+        print("    " + a_val + " is NOT IN VARS VITCH")
     if b_val in vars:
         b_val = vars[b_val]
     if math_type == "add":
+        print("    " + a_val + " + " + b_val)
         return int(a_val) + int(b_val)
     if math_type == "sub":
         return int(a_val) - int(b_val)
@@ -51,6 +61,7 @@ def equal_tokens(a_val, b_val):
         return False
 
 def run_function(function):
+    prints = []
     line_split = function.split("\n")
     line_num = -1
     while line_num < len(line_split) - 1:
@@ -68,13 +79,20 @@ def run_function(function):
                 else:
                     tokens.append(token)
 
-        run_tokens(tokens, function, line_num)
+        prints, line_num = run_tokens(tokens, function, line_num)
+        print("")
+
+    return prints
 
 def run_tokens(tokens, function, line_num):
-    prints = []
     in_string = False
     depth = 0
-    # print(tokens)
+
+    accusative = ""
+
+    print("TOKENS BEING RUN: ")
+    print(tokens)
+    print("line num: " + str(line_num + 1))
     for parsed_token in tokens:
         if parsed_token == " ":
             continue
@@ -90,16 +108,30 @@ def run_tokens(tokens, function, line_num):
             # if parsed_token == "𒉿𒍝𒁍":
             # a_val, b_val = add_tokens(tokens, depth)
             # tokens[depth] = a_val + b_val
+
+            # comment
             if parsed_token == "#":
                 continue
 
+            if parsed_token[-1] == "𒌝":
+                nominative = parsed_token
+                print("    got nominative - " + nominative)
+
+            if parsed_token[-1] == "𒅎":
+                genitive = parsed_token
+                print("    got genitive - " + genitive)
+
+            if parsed_token[-1] == "𒄠":
+                accusative = parsed_token
+                print("    got accusative - " + accusative)
+
             # free var
             if parsed_token == "𒉿𒍑𒋗𒊒𒌝":
-                if tokens[depth - 1][-1] != "𒄠":
-                    print(f"Line {line_num}: {tokens} - ERROR: Expected accusative case")
+                if accusative is "":
+                    print(f"Line {line_num}: {tokens} - ERROR: Expected a word in the accusative case.")
                     exit()
                 else:
-                    vars.__delitem__(tokens[depth - 1].replace("𒄠", "𒌝"))
+                    vars.__delitem__(accusative.replace("𒄠", "𒌝"))
             if parsed_token == "𒋗":
                 # print("equals function detected")
                 # print("tokens[depth] " + tokens[depth])
@@ -114,17 +146,27 @@ def run_tokens(tokens, function, line_num):
                     b_val = TRANSLATE_NUMBERS[b_val]
                 if tokens[len(tokens) - 1] == "𒉿𒍝𒁍":
                     # print("𒉿𒍝𒁍 detected")
-                    added_tokens = math_tokens(tokens[depth - 4], tokens[depth - 3], "add")
-                    vars.update({a_val: added_tokens})
-                    continue
+                    # print(tokens)
+                    # print(tokens[depth])
+                    # print(vars)
+                    # print("    " + tokens[depth + 1])
+                    b_val = math_tokens(tokens[depth + 1], tokens[depth + 2], "add")
                 elif tokens[len(tokens) - 1] == "sub":
                     # print("sub detected")
-                    subbed_tokens = math_tokens(tokens[depth - 4], tokens[depth - 3], "sub")
-                    vars.update({a_val: subbed_tokens})
-                    continue
+                    b_val = math_tokens(tokens[depth + 1], tokens[depth + 2], "sub")
+
+                if b_val in vars:
+                    b_val = vars[a_val]
+                if tokens[depth - 2]:
+                    if tokens[depth - 2][-1] == "𒅎":
+                        gen_val = tokens[depth - 2].replace("𒅎", "𒌝")
+                        struct_vars.append({gen_val: {a_val: b_val}})
+                    else:
+                        vars.update({a_val: b_val})
                 else:
                     vars.update({a_val: b_val})
 
+            # print
             if parsed_token == "𒋗𒇬":
                 new_print = ""
                 # print("print function detected")
@@ -164,14 +206,28 @@ def run_tokens(tokens, function, line_num):
 
                 # print("what")
                 # print("tokens[max_depth - min_depth + 1] " + tokens[max_depth - min_depth + 1])
+                print_val = ""
                 if tokens[max_depth - min_depth + 1] == "𒄿𒈾":
                     # print("𒄿𒈾 detected")
                     print_var = tokens[max_depth - min_depth + 2]
-                    print_val = vars[tokens[max_depth - min_depth + 4].replace("𒅎", "𒌝")]
-                    if print_val in TRANSLATE_NUMBERS_LATIN:
-                        print_val = TRANSLATE_NUMBERS_LATIN[print_val]
+                    if tokens[max_depth - min_depth + 5] != "𒋗𒇬":
+                        for struct in struct_vars:
+                            print("struct:")
+                            print(struct)
+                            for var, var_val in struct.items():
+                                print("var: " + var)
+                                if var == tokens[max_depth - min_depth + 4].replace("𒅎", "𒌝"):
+                                    for scnd_var, val in var_val.items():
+                                        print("scnd_var: " + scnd_var)
+                                        if scnd_var == tokens[max_depth - min_depth + 5].replace("𒅎", "𒌝"):
+                                            print_val = val
+                    else:
+                        print_val = vars[tokens[max_depth - min_depth + 4].replace("𒅎", "𒌝")]
+                        if print_val in TRANSLATE_NUMBERS_LATIN:
+                            print_val = TRANSLATE_NUMBERS_LATIN[print_val]
                     new_print = new_print.replace(print_var, str(print_val))
 
+                print("    new print: " + new_print)
                 prints.append(new_print)
 
             # while
@@ -202,12 +258,12 @@ def run_tokens(tokens, function, line_num):
                         # print(function.split("\n")[line_num + bool_line_depth].replace("        ", ""))
                         run_tokens(function.split(" ")[line_num + bool_line_depth].replace("        ", ""),
                                    function, line_num)
-                        bool_result = equal_tokens(tokens[len(tokens) - 3], tokens[len(tokens) - 2])
                         line_num += 1
                         bool_line_depth += 1
                         print(bool_result)
                         # print(bool_line_depth)
                     else:
+                        bool_result = equal_tokens(tokens[len(tokens) - 3], tokens[len(tokens) - 2])
                         line_num = orig_line
             # if
             if parsed_token == "𒋳𒈠":
@@ -222,21 +278,21 @@ def run_tokens(tokens, function, line_num):
                     # print("parsed 𒄿𒈠𒊍𒊩 // equals")
                     bool_result = equal_tokens(vars[tokens[len(tokens) - 3]], tokens[len(tokens) - 2])
                 if tokens[len(tokens) - 1] == "gr_than":
-                    if vars[tokens[len(tokens) - 3]] > tokens[len(tokens) - 2]:
+                    if int(vars[tokens[len(tokens) - 3]]) > int(tokens[len(tokens) - 2]):
                         bool_result = True
                     else:
                         bool_result = False
                 if tokens[len(tokens) - 1] == "ls_than":
-                    if vars[tokens[len(tokens) - 3]] < tokens[len(tokens) - 2]:
+                    if int(vars[tokens[len(tokens) - 3]]) < int(tokens[len(tokens) - 2]):
                         bool_result = True
                     else:
                         bool_result = False
 
                 if bool_result is False:
-                    # print("if not bool_result")
+                    print("if not bool_result")
                     line_num += 1
-                elif bool_result is False:
-                    # print("if bool_result")
+                elif bool_result is True:
+                    print("if bool_result")
                     continue
                 elif bool_result is None:
                     print("ERROR: bool_result returned none")
@@ -245,15 +301,19 @@ def run_tokens(tokens, function, line_num):
             # if parsed_token == "𒀺":
             #     continue
         depth += 1
+
+    return prints, line_num
     # print("")
-    for p in prints:
-        cunei_print(p)
 
 
 if __name__ == '__main__':
     current_dir = Path(__file__).resolve().parent
+    # "mesopotamian_city_simulator.txt"
+    # "fibonacci.txt"
     program_loc = current_dir / "mesopotamian_city_simulator.txt"
     file = open(program_loc, "r")
+
+    prints = []
 
     with open(program_loc, encoding="utf-8") as f:
         src = f.read()
@@ -265,10 +325,18 @@ if __name__ == '__main__':
                 run_function(src.split("𒐕")[1])
             # else:
                 # print("did not get " + token)
-
+    for p in prints:
+        cunei_print(p)
     print("")
     print("VAR RESULTS:")
     for var, val in vars.items():
         if val in TRANSLATE_NUMBERS_LATIN:
             val = TRANSLATE_NUMBERS_LATIN[val]
         cunei_print(str(var) + " 𒋗 " + str(val))
+
+    print("")
+    print("STRUCT RESULTS:")
+    for struct in struct_vars:
+        for var, var_val in struct.items():
+            for scnd_var, val in var_val.items():
+                cunei_print(str(var).replace("𒌝", "𒅎") + " " + str(scnd_var) + " 𒋗 " + str(val))
