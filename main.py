@@ -132,6 +132,8 @@ def run_tokens(tokens, function, line_num):
                     exit()
                 else:
                     vars.__delitem__(accusative.replace("𒄠", "𒌝"))
+
+            # is, equals
             if parsed_token == "𒋗":
                 # print("equals function detected")
                 # print("tokens[depth] " + tokens[depth])
@@ -161,10 +163,13 @@ def run_tokens(tokens, function, line_num):
                     if tokens[depth - 2][-1] == "𒅎":
                         gen_val = tokens[depth - 2].replace("𒅎", "𒌝")
                         struct_vars.append({gen_val: {a_val: b_val}})
+                        print("    UPDATED STRUCT VAR - " + gen_val + ": {" + a_val + ": " + str(b_val) + "}")
                     else:
                         vars.update({a_val: b_val})
+                        print("    UPDATED VAR - " + a_val + ": " + str(b_val))
                 else:
                     vars.update({a_val: b_val})
+                    print("    UPDATED VAR - " + a_val + ": " + str(b_val))
 
             # print
             if parsed_token == "𒋗𒇬":
@@ -310,7 +315,7 @@ if __name__ == '__main__':
     current_dir = Path(__file__).resolve().parent
     # "mesopotamian_city_simulator.txt"
     # "fibonacci.txt"
-    program_loc = current_dir / "mesopotamian_city_simulator.txt"
+    program_loc = current_dir / "fibonacci.txt"
     file = open(program_loc, "r")
 
     prints = []
