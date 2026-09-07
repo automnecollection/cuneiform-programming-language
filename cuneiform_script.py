@@ -13,6 +13,8 @@ LATIN_TRANSLATE = {
     # B
     "𒁉": "bi",
     "𒁍": "bu",
+    # D
+    "𒉈": "de",
     # I
     "𒅎": "im",
     # L
@@ -34,4 +36,6 @@ LATIN_TRANSLATE = {
     "𒂵": "ga",
     "𒄖": "gu",
     "𒋡": "qa",
+
+    "𒍝": "za",
 }

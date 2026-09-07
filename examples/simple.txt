@@ -1,0 +1,19 @@
+𒀀𒁍𒋾𒅎 𒌨𒊑𒌓 𒐕
+    # var declaration
+    𒀀𒈝 𒀀𒂵𒉈
+
+    # var declaration with copula
+    𒊭𒀜𒌈 𒋗 𒍝𒌝
+
+    # double var declaration (does not work)
+    𒌅𒌈 𒋗 𒇷𒈝 𒅇 𒇷𒌈 𒋗 𒌅𒈝
+
+    # print some shit
+    𐏐 𒀭 hi :) 𒀭 𒀺 𒋗𒇬
+
+    # creating string without using it
+    𐏐 THIS IS A USELESS STRING 𒀺
+
+    # print var value
+    𐏐 𒊭𒀜𒌈 𒍝𒌝 𒀺 𒋗𒇬
+𒐕
