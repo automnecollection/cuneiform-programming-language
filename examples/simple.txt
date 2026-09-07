@@ -16,4 +16,8 @@
 
     # print var value
     𐏐 𒊭𒀜𒌈 𒍝𒌝 𒀺 𒋗𒇬
+
+    # add some numbers
+    1 𒅇 2 𒉿𒍝𒁍
+    # should print out >> 1 𒅇 2 𒋗 3
 𒐕

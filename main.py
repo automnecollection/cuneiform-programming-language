@@ -126,7 +126,7 @@ def create_token_dictionaries(tokens, function, line_num):
         if not in_string and new_print is not "":
             new_print = new_print[:-1]
             tok_dict.append({
-                "verb": "print",
+                "verb": "sutur",  # print
                 "accusative": str(new_print)
             })
             print("    NEW PRINT:" + str(tok_dict))
@@ -180,7 +180,7 @@ def create_token_dictionaries(tokens, function, line_num):
                 scnd_nominative = tokens[nominative_depth_index + 1]
             new_var = {nominative: scnd_nominative}
             tok_dict.append({
-                "verb": "var_equal",
+                "verb": "imassal",  # var_equals // 𒄿𒈠𒊍𒊩
                 "nominative": str(nominative),
                 "scnd_nominative": str(scnd_nominative)
             })
